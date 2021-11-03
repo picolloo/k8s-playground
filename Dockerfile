@@ -6,14 +6,19 @@ COPY . .
 
 RUN go get -d -v ./...
 
-RUN go build -a -o app .
+RUN GOOS=linux go build -a -o app .
+
 
 
 FROM alpine:latest
+
+WORKDIR /go/src
 
 COPY --from=builder /go/src/app .
 
 EXPOSE 8000
 
-CMD [ "./app" ]
+RUN chmod +x ./app
+
+ENTRYPOINT [ "./app" ]
 
